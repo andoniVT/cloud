@@ -69,8 +69,7 @@ public class Conexion
 		Region usWest2 = Region.getRegion(Regions.SA_EAST_1);
 		client.setRegion(usWest2);
 	}
-	
-	
+		
 	public static Vector getWordData(String word)
 	{				
 		Vector finalResult = new Vector();
@@ -97,26 +96,38 @@ public class Conexion
 		return finalResult;
 	}
 	
-	public static Vector <Vector> getAllVectors()
+	public static Map<String , Vector > getAllVectors()
 	{
+		Map<String , Vector > theResults = new HashMap<String, Vector>();
 		String tableName = "Document";
 		Vector <Vector> results = new Vector();
 		ScanRequest scanRequest = new ScanRequest(tableName);
 		ScanResult result = client.scan(scanRequest);
 		java.util.List<AttributeValue> myList = null;
+		String myId ="";
+		Vector Ids = new Vector();
 		for(Map<String,AttributeValue> item: result.getItems())
 		{							
+			myId = item.get("DocumentID").getS().toString();
+			Ids.add(myId);
+			
 			myList = item.get("DocumentVector").getL();
 			Vector partial = new Vector();
 			for(int i=0; i<myList.size();i++)
 			{				
 				double val = Double.parseDouble(myList.get(i).getN().toString());  
-				partial.add(val);
+				partial.add(val);				
 			}			
-			results.add(partial);									
-		}
-		//System.out.println(results);
-		return results;
+			results.add(partial);			
+		}		
+		for(int i=0; i<Ids.size();i++)
+		{
+			String key = (String) Ids.elementAt(i); 
+			Vector value = results.elementAt(i);	
+			theResults.put(key, value);			
+		}		
+		//System.out.println(theResults);					
+		return theResults;
 	}
 	
 	public static Vector getVector(String id , String tableName)
