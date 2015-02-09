@@ -16,7 +16,7 @@ public class Utils
 {
 	public static void main(String[] args) 
 	{
-		Vector query = new Vector() , v1 = new Vector(), v2 = new Vector() , v3=new Vector();
+		/*Vector query = new Vector() , v1 = new Vector(), v2 = new Vector() , v3=new Vector();
 		query.add(0.0) ; query.add(0.25); query.add(0.6); query.add(0.0);query.add(0.0);
 		
 		v1.add(0.0); v1.add(0.0); v1.add(0.25); v1.add(0.3); v1.add(0.0);
@@ -27,21 +27,28 @@ public class Utils
 		allVectors.put("2", v1); allVectors.put("1", v2); allVectors.put("3", v3);
 		
 		Map<String,Double> res = compareVectors(query , allVectors);
-		System.out.println(res);
+		System.out.println(res);*/
+		
+		Vector v1 = new Vector() , v2 = new Vector();
+		v1.add(0.04); v1.add(0.3);v1.add(0.0);v1.add(0.6);v1.add(0.1);
+		v2.add(0.7); v2.add(0.3);v2.add(0.0);v2.add(0.0);v2.add(0.1);
+		System.out.println(cosineDistance(v1 , v2));
+		
+		
 	}
 	
 	public static double cosineDistance(Vector v1 , Vector v2)
 	{
 		double numerador = 0 , denominador, d1=0 , d2=0;
-		for(int i=0; i<v1.size(); i++)		 
-			numerador += (double) v1.elementAt(i) * (double) v2.elementAt(i);			
+		for(int i=0; i<v1.size(); i++)		 						
+				numerador += (double) v1.elementAt(i) * (double) v2.elementAt(i);						
 		for(int i=0; i<v1.size(); i++)
-		{
+		{			
 			d1 += (double) v1.elementAt(i) * (double)v1.elementAt(i);
 			d2 += (double) v2.elementAt(i) * (double)v2.elementAt(i);
 		}
 		denominador = Math.sqrt(d1) * Math.sqrt(d2);		
-		return 1 - (numerador/denominador);	 
+		return numerador/denominador;	 
 	}
 	
 	public static Vector buildVector(Vector indexes , Vector frequencies , int size)
@@ -49,7 +56,7 @@ public class Utils
 		Vector result = new Vector();			
 		for(int i=0; i<size; i++)
 		{
-		  result.add(0);
+		  result.add(0.0);
 		}
 		for(int i=0; i<indexes.size();i++)
 		{
@@ -62,18 +69,17 @@ public class Utils
 	}
 	
 	public static Map<String,Double> compareVectors(Vector query , Map<String,Vector> allVectors)
-	{
-	   Iterator it = allVectors.keySet().iterator();
+	{	   
+		Iterator it = allVectors.keySet().iterator();
 	   Map<String,Vector> allVectorss = new HashMap<String, Vector>();
-	   Map<String,Double> allDistances = new HashMap<String, Double>();
-	   
+	   Map<String,Double> allDistances = new HashMap<String, Double>();	 
 	   while(it.hasNext())
-	   {
+	   {		   
 		   String key = (String) it.next();
-		   Vector value = allVectors.get(key);
-		   double distance =  cosineDistance(query , value);
+		   Vector value = allVectors.get(key);		   
+		   double distance =  cosineDistance(query , value);		   
 		   allDistances.put(key, distance);		   
-	   }
+	   }	   
 	   Map sortedMap = sortByValue(allDistances);
 	   //System.out.println(sortedMap);
 	   return sortedMap;
