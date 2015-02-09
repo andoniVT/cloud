@@ -4,12 +4,14 @@ import java.util.Vector;
 
 import manager.Conexion;
 import manager.StopWords;
-
+import manager.Utils;
 public class QuerySystem 
 {
+	public static int size_vectors = 5;
+	
 	public static void main(String[] args) throws Exception 
 	{
-		String word = "ciencia de la computacion casita";		
+		String word = "ciencia de la computacion casita papel";		
 		ArrayList<String> result = StopWords.removeStopWords(word);		
 		Conexion.init();
 			
@@ -29,9 +31,16 @@ public class QuerySystem
 				frequencies.add(word_frequency);
 			}							    					
 		}
-		System.out.print(indexes);
-		System.out.print("\n");
-		System.out.print(frequencies);
+		
+		vector_query = Utils.buildVector(indexes, frequencies, size_vectors);
+		System.out.print("Result: \n");
+		System.out.print(vector_query);
+		
+		
+		
+		
+	
+		
 		
 		
 		

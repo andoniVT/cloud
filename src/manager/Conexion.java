@@ -40,7 +40,8 @@ public class Conexion
 	    	  //getVector(id , tableName);
 	    	  //getFrecuency(id , tableName);
 	    	  //getFrecuencies(tableName);
-	    	  getWordData("celular");
+	    	  //getWordData("celular");
+	    	  getAllVectors();
 	    	      	  
 	       }
 	       catch(AmazonServiceException ase)
@@ -96,6 +97,28 @@ public class Conexion
 		return finalResult;
 	}
 	
+	public static Vector <Vector> getAllVectors()
+	{
+		String tableName = "Document";
+		Vector <Vector> results = new Vector();
+		ScanRequest scanRequest = new ScanRequest(tableName);
+		ScanResult result = client.scan(scanRequest);
+		java.util.List<AttributeValue> myList = null;
+		for(Map<String,AttributeValue> item: result.getItems())
+		{							
+			myList = item.get("DocumentVector").getL();
+			Vector partial = new Vector();
+			for(int i=0; i<myList.size();i++)
+			{				
+				double val = Double.parseDouble(myList.get(i).getN().toString());  
+				partial.add(val);
+			}			
+			results.add(partial);									
+		}
+		//System.out.println(results);
+		return results;
+	}
+	
 	public static Vector getVector(String id , String tableName)
 	{
 		Map<String,AttributeValue> key = new HashMap<String,AttributeValue>();
@@ -119,6 +142,5 @@ public class Conexion
 		}
 		System.out.println(vectorValue);
 		return vectorValue;
-	}
-	
+	}	
 }
