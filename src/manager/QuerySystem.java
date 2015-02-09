@@ -35,6 +35,7 @@ public class QuerySystem
 		vector_query = Utils.buildVector(indexes, frequencies, size_vectors);
 		System.out.print("Result: \n");
 		System.out.print(vector_query);
+		System.out.print("OK");
 		
 		
 		
