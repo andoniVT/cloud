@@ -47,14 +47,5 @@ public class QuerySystem
 		Vector results = Conexion.queryDocs(distances, 2);
 		System.out.println(results);
 		
-		
-		
-	
-		
-		
-		
-		
-		
-		
 	}
 }
