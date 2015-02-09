@@ -2,6 +2,7 @@ package manager;
 import java.text.SimpleDateFormat;
 import java.util.Date; 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
@@ -129,6 +130,41 @@ public class Conexion
 		//System.out.println(theResults);					
 		return theResults;
 	}
+	
+	public static Vector queryDocs(Map<String,Double> distances, int N)
+	{
+		int aux = 0;		
+		Iterator it = distances.keySet().iterator();
+		Vector keys = new Vector();
+		   while(it.hasNext() & aux<N)
+		   {		   
+			   String key = (String) it.next();
+			   keys.add(key); 
+			   aux++;
+		   }		   
+		   System.out.println(keys);
+		Vector results = new Vector();
+		
+		for(int i=0; i<keys.size();i++)
+		{
+			Map<String,AttributeValue> key = new HashMap<String,AttributeValue>();
+			key.put("DocumentID", new AttributeValue().withS((String) keys.elementAt(i)));
+			GetItemRequest getItemRequest = new GetItemRequest()
+				.withTableName("Document")
+				.withKey(key)
+				.withProjectionExpression("DocumentName");
+			GetItemResult result = client.getItem(getItemRequest);
+			for(Map.Entry<String, AttributeValue> item : result.getItem().entrySet())
+			{
+				AttributeValue value = item.getValue();
+				String valor = value.getS().toString();
+				results.add(valor);				
+			}
+		}
+		//System.out.println(results);
+		return results;		
+	}
+	
 	
 	public static Vector getVector(String id , String tableName)
 	{

@@ -41,9 +41,11 @@ public class QuerySystem
 		Map<String , Vector > allVectors = Conexion.getAllVectors();
 				
 		Map<String,Double> distances = Utils.compareVectors(vector_query , allVectors);
-		System.out.println(allVectors);
-		System.out.println(vector_query);
+		System.out.println(allVectors);		
 		System.out.println(distances);
+		
+		Vector results = Conexion.queryDocs(distances, 2);
+		System.out.println(results);
 		
 		
 		
