@@ -190,32 +190,47 @@ public class Conexion
 				.withKey(key)
 				.withProjectionExpression("cadpalabra");
 			GetItemResult result = client.getItem(getItemRequest);
-			for(Map.Entry<String, AttributeValue> item: result.getItem().entrySet())
+			if (!result.toString().equals("{}"))
 			{
-				AttributeValue value = item.getValue();
-				String words = value.getS();
-				StringTokenizer st =new StringTokenizer(words);
-				while(st.hasMoreElements())
+				for(Map.Entry<String, AttributeValue> item: result.getItem().entrySet())
 				{
-					String palabrita = (String) st.nextElement();
-					queryWords.add(palabrita);
-				}														
+					AttributeValue value = item.getValue();
+					String words = value.getS();
+					StringTokenizer st =new StringTokenizer(words);
+					while(st.hasMoreElements())
+					{
+						String palabrita = (String) st.nextElement();
+						queryWords.add(palabrita);
+					}														
+				}	
 			}
-		}		
-		queryWords = Utils.removeDuplicateVector(queryWords);		
-		Vector reducidos = new Vector();
-		int size = 8 - query.size();
-		for(int i=0; i<size; i++)
-		{
-			reducidos.add(queryWords.elementAt(i));
-		}
-		//System.out.println(reducidos);		
+			else
+			{
+				System.out.println("No hay");
+			}				
+		}	
 		Vector<Vector> allFrecResults = new Vector();
-		for(int i=0; i<reducidos.size();i++)
+		if(queryWords.size()!=0)
 		{
-			Vector vec = getWordData((String) reducidos.elementAt(i));
-			if(vec.size()!=0)
-				allFrecResults.add(vec);			
+			queryWords = Utils.removeDuplicateVector(queryWords);		
+			Vector reducidos = new Vector();
+			int size = 8 - query.size();
+			for(int i=0; i<size; i++)
+			{
+				reducidos.add(queryWords.elementAt(i));
+			}
+			//System.out.println(reducidos);		
+			
+			for(int i=0; i<reducidos.size();i++)
+			{
+				Vector vec = getWordData((String) reducidos.elementAt(i));
+				if(vec.size()!=0)
+					allFrecResults.add(vec);			
+			}	
+		}
+		else
+		{
+			System.out.println("NO existe");
 		}
 		//System.out.println(allFrecResults);						
 		return allFrecResults;							

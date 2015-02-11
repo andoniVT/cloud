@@ -10,7 +10,7 @@ import manager.Utils;
 
 public class QuerySystem 
 {
-	public static int size_vectors = 1489;
+	public static int size_vectors = 1488;
 	
 	public static void main(String[] args) throws Exception 
 	{
@@ -45,12 +45,15 @@ public class QuerySystem
 		{
 			System.out.println("Genetic");
 			Vector wordsGenetic =  Conexion.getWordsFrecGenetic(result);
-			for(int i=0; i<wordsGenetic.size();i++)
+			if(wordsGenetic.size()!=0)
 			{
-				indexes.add(((Vector) wordsGenetic.elementAt(i)).elementAt(0));
-				frequencies.add(((Vector) wordsGenetic.elementAt(i)).elementAt(1));
-				vector_query = Utils.buildVector(indexes, frequencies, size_vectors);
-			}							
+				for(int i=0; i<wordsGenetic.size();i++)
+				{
+					indexes.add(((Vector) wordsGenetic.elementAt(i)).elementAt(0));
+					frequencies.add(((Vector) wordsGenetic.elementAt(i)).elementAt(1));
+					vector_query = Utils.buildVector(indexes, frequencies, size_vectors);
+				}		
+			}											
 		}
 		else
 		{
