@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.Vector;
 import java.awt.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.Math;
 import java.util.ArrayList;
 
@@ -104,7 +107,8 @@ public class Conexion
 		Vector <Vector> results = new Vector();
 		ScanRequest scanRequest = new ScanRequest(tableName);
 		ScanResult result = client.scan(scanRequest);
-		java.util.List<AttributeValue> myList = null;
+		//java.util.List<AttributeValue> myList = null;
+		String myList = "";
 		String myId ="";
 		Vector Ids = new Vector();
 		for(Map<String,AttributeValue> item: result.getItems())
@@ -112,13 +116,15 @@ public class Conexion
 			myId = item.get("DocumentID").getS().toString();
 			Ids.add(myId);
 			
-			myList = item.get("DocumentVector").getL();
-			Vector partial = new Vector();
-			for(int i=0; i<myList.size();i++)
-			{				
-				double val = Double.parseDouble(myList.get(i).getN().toString());  
-				partial.add(val);				
-			}			
+			myList = item.get("DocumentVector").getS().toString();
+			Vector partial = new Vector();			
+			StringTokenizer st =new StringTokenizer(myList);
+			while (st.hasMoreElements())
+		       {
+		    	   String number =(String) st.nextElement();
+		    	   double numValue = Double.parseDouble(number); 
+		    	   partial.add(numValue);
+		       }						
 			results.add(partial);			
 		}		
 		for(int i=0; i<Ids.size();i++)
@@ -127,7 +133,7 @@ public class Conexion
 			Vector value = results.elementAt(i);	
 			theResults.put(key, value);			
 		}		
-		//System.out.println(theResults);					
+		System.out.println(theResults);					
 		return theResults;
 	}
 	
