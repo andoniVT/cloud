@@ -30,6 +30,7 @@ import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 
+import manager.Utils;
 public class Conexion 
 {
 	static AmazonDynamoDBClient client;
@@ -45,7 +46,11 @@ public class Conexion
 	    	  //getFrecuency(id , tableName);
 	    	  //getFrecuencies(tableName);
 	    	  //getWordData("celular");
-	    	  getAllVectors();
+	    	  //getAllVectors();
+	    	  ArrayList<String> query = new ArrayList<String>() ;
+	    	  query.add("otra");
+	    	  query.add("ejemplo");
+	    	  getWordsFrecGenetic(query);
 	    	      	  
 	       }
 	       catch(AmazonServiceException ase)
@@ -73,6 +78,7 @@ public class Conexion
 		Region usWest2 = Region.getRegion(Regions.SA_EAST_1);
 		client.setRegion(usWest2);
 	}
+	
 		
 	public static Vector getWordData(String word)
 	{				
@@ -169,6 +175,50 @@ public class Conexion
 		}
 		//System.out.println(results);
 		return results;		
+	}
+	
+	public static Vector<Vector> getWordsFrecGenetic(ArrayList<String> query)
+	{		
+		String query_words = "";
+		Vector queryWords = new Vector();
+		for(int i=0; i<2; i++)
+		{
+			Map<String,AttributeValue> key = new HashMap<String,AttributeValue>();
+			key.put("palabra", new AttributeValue().withS(query.get(i)));
+			GetItemRequest getItemRequest = new GetItemRequest()
+				.withTableName("ResultadoGenetico")
+				.withKey(key)
+				.withProjectionExpression("cadpalabra");
+			GetItemResult result = client.getItem(getItemRequest);
+			for(Map.Entry<String, AttributeValue> item: result.getItem().entrySet())
+			{
+				AttributeValue value = item.getValue();
+				String words = value.getS();
+				StringTokenizer st =new StringTokenizer(words);
+				while(st.hasMoreElements())
+				{
+					String palabrita = (String) st.nextElement();
+					queryWords.add(palabrita);
+				}														
+			}
+		}		
+		queryWords = Utils.removeDuplicateVector(queryWords);		
+		Vector reducidos = new Vector();
+		int size = 8 - query.size();
+		for(int i=0; i<size; i++)
+		{
+			reducidos.add(queryWords.elementAt(i));
+		}
+		//System.out.println(reducidos);		
+		Vector<Vector> allFrecResults = new Vector();
+		for(int i=0; i<reducidos.size();i++)
+		{
+			Vector vec = getWordData((String) reducidos.elementAt(i));
+			if(vec.size()!=0)
+				allFrecResults.add(vec);			
+		}
+		//System.out.println(allFrecResults);						
+		return allFrecResults;							
 	}
 	
 	

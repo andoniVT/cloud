@@ -6,17 +6,25 @@ import java.util.Vector;
 import manager.Conexion;
 import manager.StopWords;
 import manager.Utils;
+
+
 public class QuerySystem 
 {
-	public static int size_vectors = 5;
+	public static int size_vectors = 1489;
 	
 	public static void main(String[] args) throws Exception 
 	{
-		String word = "ciencia de la computacion casita papel";		
-		ArrayList<String> result = StopWords.removeStopWords(word);		
-		Conexion.init();
-			
-		Vector vector_query = new Vector() , indexes = new Vector() , frequencies = new Vector();
+		String query = "ciencia de la computacion casita papel";
+		String results = querySystem(query , 3 , false);
+		System.out.println(results);
+	}
+	
+	public static String querySystem(String query , int retrieve , boolean genetic) throws Exception
+	{
+		//String word = "ciencia de la computacion casita papel";		
+		ArrayList<String> result = StopWords.removeStopWords(query);		
+		Conexion.init();			
+		Vector vector_query = new Vector() , indexes = new Vector() , frequencies = new Vector();		
 		
 		int word_index=0;
 		double word_frequency=0;
@@ -33,19 +41,30 @@ public class QuerySystem
 			}							    					
 		}
 		
-		vector_query = Utils.buildVector(indexes, frequencies, size_vectors);
-		//System.out.print("Result: \n");
-		//System.out.print(vector_query);
-		//System.out.print("OK");
+		if(genetic)
+		{
+			System.out.println("Genetic");
+			Vector wordsGenetic =  Conexion.getWordsFrecGenetic(result);
+			for(int i=0; i<wordsGenetic.size();i++)
+			{
+				indexes.add(((Vector) wordsGenetic.elementAt(i)).elementAt(0));
+				frequencies.add(((Vector) wordsGenetic.elementAt(i)).elementAt(1));
+				vector_query = Utils.buildVector(indexes, frequencies, size_vectors);
+			}							
+		}
+		else
+		{
+			vector_query = Utils.buildVector(indexes, frequencies, size_vectors);	
+		}
+						
 		
-		Map<String , Vector > allVectors = Conexion.getAllVectors();
-				
+		Map<String , Vector > allVectors = Conexion.getAllVectors();				
 		Map<String,Double> distances = Utils.compareVectors(vector_query , allVectors);
 		System.out.println(allVectors);		
 		System.out.println(distances);
 		
-		Vector results = Conexion.queryDocs(distances, 2);
+		Vector results = Conexion.queryDocs(distances, retrieve);
 		System.out.println(results);
-		
+		return results.toString();
 	}
 }

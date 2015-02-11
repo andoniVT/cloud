@@ -32,7 +32,9 @@ public class Utils
 		Vector v1 = new Vector() , v2 = new Vector();
 		v1.add(0.04); v1.add(0.3);v1.add(0.0);v1.add(0.6);v1.add(0.1);
 		v2.add(0.7); v2.add(0.3);v2.add(0.0);v2.add(0.0);v2.add(0.1);
-		System.out.println(cosineDistance(v1 , v2));
+		//System.out.println(cosineDistance(v1 , v2));
+		
+		removeDuplicate("mom madam mom madam son");
 		
 		
 	}
@@ -90,7 +92,58 @@ public class Utils
 		Map sortedMap = new TreeMap(new ValueComparator(unsortedMap));
 		sortedMap.putAll(unsortedMap);
 		return sortedMap;
-	}	
+	}
+	
+	public static String removeDuplicate(String word)
+	{
+		int i=0,j=0,n;
+		String array_word[];
+		String final_string="";
+		array_word=word.split(" ");
+		n=array_word.length;
+
+		for(i=0;i<n;i++)
+		{
+			for(j=i+1;j<n;j++)
+				{
+					if(array_word[i].equalsIgnoreCase(array_word[j]) && !array_word[i].equalsIgnoreCase("**"))
+					{
+						array_word[j]="**";  //replace repeated words by  **
+					}
+				}
+		}
+
+		for(i=0;i<n;i++)
+		{
+			if(array_word[i]!="**")
+				{
+					final_string=final_string+array_word[i]+" ";
+				}
+		}		
+		//System.out.println(final_string);
+		return final_string;
+	}
+	
+	public static Vector removeDuplicateVector(Vector v)
+	{
+		for(int i=0;i<v.size();i++)
+        {
+            for(int j=0;j<v.size();j++)
+            {
+              if(i!=j)
+                  {
+            	  	if(v.elementAt(i).equals(v.elementAt(j)))
+                        {
+            	  			v.removeElementAt(j);
+                        }
+
+                   }
+            }
+
+        }
+		return v;
+	}
+	
 }
 
 class ValueComparator implements Comparator {
