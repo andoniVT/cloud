@@ -9,13 +9,15 @@ import manager.Utils;
 
 
 public class QuerySystem 
-{
+{	
 	public static int size_vectors = 1488;
 	
 	public static void main(String[] args) throws Exception 
 	{
-		String query = "ciencia de la computacion casita papel";
+		String query = "ciencia de la computacion";		
 		String results = querySystem(query , 3 , false);
+		System.out.println("Query: " + query);
+		System.out.println("Documentos recuperados: " + results);
 		System.out.println(results);
 	}
 	
@@ -67,7 +69,7 @@ public class QuerySystem
 		System.out.println(distances);
 		
 		Vector results = Conexion.queryDocs(distances, retrieve);
-		System.out.println(results);
+		//System.out.println(results);
 		return results.toString();
 	}
 }
